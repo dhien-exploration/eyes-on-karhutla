@@ -2,7 +2,7 @@
 
 Implemented in `archive.py`, `pipeline.run_archive` and `activity` (status functions). The export
 built on it is [summary](summary.md) (contract v1). Tests: `test_archive.py`, `test_export.py`,
-plus additions to the harmonization and activity tests. The web requirements this answers are in
+plus additions to the harmonization and activity tests. The owner decisions on the web side are in
 `../web/lode/plans/multi-year.md`.
 
 ## Owner decisions (2026-10-24)

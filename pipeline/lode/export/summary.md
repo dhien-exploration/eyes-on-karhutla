@@ -108,7 +108,6 @@ products["provinces/ID-KT/monthly.json"]["modis"][:3]
 
 ## Not yet done
 - Stage 2 publishing (scheduled CI to static hosting). See `docs/README.md` §4.
-- `web/` must read `public/data/v1` and accept `schema_version` `1.x`.
 - Multi-year national cell layers (likely PMTiles) if per-province files become too slow.
 
 Related: [multi-year-archive](multi-year-archive.md) · [activity](../activity/summary.md) ·

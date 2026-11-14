@@ -1,0 +1,25 @@
+# Lode Map
+
+- [summary.md](summary.md): one-paragraph snapshot of the project
+- [terminology.md](terminology.md): domain and project terms
+- [practices.md](practices.md): coding and workflow practices
+- architecture/
+  - [stack.md](architecture/stack.md): chosen stack, how Vite and React fit together, scripts, folder layout
+- data/
+  - [data-products.md](data/data-products.md): the v1 multi-year data contract (schemas = truth), shapes, invariants, current export facts
+  - [loader.md](data/loader.md): `src/data/` client, React hooks, validation, error kinds, code generation
+- i18n/
+  - [i18n.md](i18n/i18n.md): language system, default language, the always-visible switch
+- map/
+  - [summary.md](map/summary.md): MapLibre map, OpenFreeMap basemap, bounds, hover/select/fly-in, map lessons
+  - [choropleth.md](map/choropleth.md): one-sensor-at-a-time province shading, classes, ramps, legend
+  - [cells.md](map/cells.md): cell dots (agreement categories, other-VIIRS switch), dot detail, performance
+  - [attribution.md](map/attribution.md): tiny sources line, OSMF rules, basemap credit parsing, full credits in the drawer
+- ui/
+  - [layout.md](ui/layout.md): full-screen map, ☰ drawer (sections), mini legend, sources line, insets, components
+- chart/
+  - [monthly.md](chart/monthly.md): monthly MODIS/VIIRS chart (uPlot), gaps vs partial, year band, click → year, table
+- plans/
+  - [roadmap.md](plans/roadmap.md): next steps and open decisions
+  - [multi-year.md](plans/multi-year.md): owner decisions for multi-year data and how the web app applies them
+- tmp/: session scraps (git-ignored)

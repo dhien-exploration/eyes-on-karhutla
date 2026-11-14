@@ -15,8 +15,6 @@ The order follows the AGENTS.md priorities. Status reflects the current repo.
 0. Public product = JS package `web/` in the same monorepo (AGENTS.md §13.1). The exporter
    writes contract v1 (multi-year, [export](../export/summary.md)); the archive holds
    2012-01-20 → 2026-06-30 and a full export validates. Next on the data side:
-   - move the web app into `web/`, switch it to `public/data/v1` and `schema_version 1.x`, then
-     re-export into it;
    - optionally extend MODIS/S-NPP to 2026-07-31 once NOAA-20 catches up (`archive pull --end`);
    - Stage 2 publishing (`docs/README.md` §4), as a path-filtered CI job in the monorepo.
 

@@ -6,7 +6,7 @@ Indonesian forest and land fires (*karhutla*). By **Dhien Exploration**.
 | Folder | Language | Role |
 |---|---|---|
 | [`pipeline/`](pipeline/) | Python (uv) | Scientific source of truth: FIRMS ingestion, MODIS–VIIRS harmonization, activity metrics, research notebooks, internal Streamlit tool, and export of versioned data products. |
-| `web/` | TypeScript | Public map. Reads the exported data products; no scientific processing. |
+| [`web/`](web/) | TypeScript (npm, Vite) | Public map (React + MapLibre). Reads the exported data products; no scientific processing. |
 
 ```mermaid
 flowchart LR

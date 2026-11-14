@@ -1,0 +1,40 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Generated data products, exported from ../pipeline (contract v1).
+# Not committed (AGENTS.md section 6); hosting is still to be decided.
+# The JSON Schemas are the exception: they are the contract and are versioned here.
+public/data/*
+!public/data/v1/
+public/data/v1/*
+!public/data/v1/schema/
+
+# Lode session scraps
+lode/tmp/
+
+# Test output
+coverage
+test-results
+playwright-report
