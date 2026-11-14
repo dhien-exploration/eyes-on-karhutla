@@ -1,11 +1,11 @@
-# Vision: Community Platform (post-hackathon)
+# Vision: Community Platform (future)
 
 **Status:** a long-term direction from the project owner (2026-10-21), written into AGENTS.md §13.2
-and the web project's AGENTS.md §10. Not designed or built. The hackathon deliverable stays the
+and the web project's AGENTS.md §10. Not designed or built. The core deliverable stays the
 harmonized MODIS–VIIRS history.
 
 ## The idea
-After the hackathon, the site becomes an open, community-driven platform:
+In the future, the site becomes an open, community-driven platform:
 - Anyone can contribute **code or data** to the repo.
 - **Local residents** can click a dot or province and post a situation update.
 - **Remote contributors** can attach findings from social media to a dot or province.

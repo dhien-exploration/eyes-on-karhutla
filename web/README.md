@@ -1,12 +1,10 @@
 # Eyes on Karhutla: web
 
-NASA Space Apps Challenge 2026: **Harmonization of MODIS and VIIRS Hot Spots**, focused on
-Indonesian forest and land fires (*karhutla*). This is the public, read-only map of historical
-burning activity across Indonesia.
+**Harmonization of MODIS and VIIRS hot spots** for Indonesian forest and land fires
+(*karhutla*). This is the public, read-only map of historical burning activity across Indonesia.
 
-This is the `web/` package of the [Dhien Exploration](https://github.com/dhien-exploration)
-`eyes-on-karhutla` monorepo. It loads, validates and displays the data products exported by
-`../pipeline`, and does no scientific processing itself.
+This is the `web/` package of the `eyes-on-karhutla` monorepo. It loads, validates and displays
+the data products exported by `../pipeline`, and does no scientific processing itself.
 
 ## What it shows
 

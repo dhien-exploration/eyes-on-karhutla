@@ -16,7 +16,7 @@ The order follows the AGENTS.md priorities. Status reflects the current repo.
    writes contract v1 (multi-year, [export](../export/summary.md)); the archive holds
    2012-01-20 → 2026-06-30 and a full export validates. Next on the data side:
    - optionally extend MODIS/S-NPP to 2026-07-31 once NOAA-20 catches up (`archive pull --end`);
-   - Stage 2 publishing (`docs/README.md` §4), as a path-filtered CI job in the monorepo.
+   - Stage 2 publishing (`docs/architecture.md` §4), as a path-filtered CI job in the monorepo.
 
    Still to decide: the boundary source (34 vs. 38 provinces), data hosting and licence.
 1. Research SiPongi+ before presenting the app as differentiated (the comparison table is still

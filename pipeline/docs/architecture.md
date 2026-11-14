@@ -1,19 +1,15 @@
-# System Pipeline Plan
+# Pipeline Architecture
 
 How satellite detections become the data behind the public Eyes on Karhutla map, and how that data
-is kept up to date.
+is kept up to date. For setup and commands, see the [pipeline README](../README.md).
 
 > Status: **Stage 1 (local export) works** (contract v1, multi-year archive: `archive.py` +
-> `export.py`). Stage 2 (automated publishing) is planned for after the hackathon. Architecture decision: see `AGENTS.md` §13.
+> `export.py`). Stage 2 (automated publishing) is planned. Architecture decision: see `AGENTS.md` §13.
 
-## 1. One monorepo, two packages
+## 1. Data flow
 
-The `dhien-exploration/eyes-on-karhutla` monorepo holds both halves of the product:
-
-| Folder | Role |
-|---|---|
-| `pipeline/` (this package, Python) | Scientific source of truth: ingestion, MODIS–VIIRS harmonization, activity metrics, research notebooks, internal Streamlit tool, and **export of data products**. |
-| `web/` (TypeScript) | Public product: interactive map and UI. It **reads** the exported data products and does no scientific processing. |
+This package computes everything; `web/` only reads the exported data products (see the
+[root README](../../README.md) for how the monorepo is split).
 
 ```mermaid
 flowchart LR
@@ -90,23 +86,22 @@ data/v1/
   one repo, a schema change and the matching web change go in the same pull request.
 
 Raw input is the local archive `data/raw/firms/{source}/{start}_{end}.csv`, filled by
-`python -m eyes_on_karhutla.archive pull` (see `pipeline/README.md`).
+`python -m eyes_on_karhutla.archive pull` (see the [pipeline README](../README.md)).
 
 ## 4. Delivering data to the web app
 
-### Stage 1: hackathon (local, one command)
+### Stage 1: local (one command)
 
 ```bash
 uv run python -m eyes_on_karhutla.archive pull --start 2012-01-01     # fill the raw archive
 uv run python -m eyes_on_karhutla.export --out ../web/public/data/v1
 ```
 
-The exporter writes straight into `web/public/data/`. Rerun it whenever the data
-changes. There is no manual copying. It refuses to overwrite a folder that isn't a previous export.
+The exporter writes straight into `web/public/data/`. Rerun it whenever the data changes. There is no manual copying. It refuses to overwrite a folder that isn't a previous export.
 Cell files compress well (8.2 MB → 0.35 MB gzipped for the largest province), so the web host must
 serve compressed files.
 
-### Stage 2: after the hackathon (automated publishing)
+### Stage 2: automated publishing
 
 ```mermaid
 flowchart LR

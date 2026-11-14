@@ -1,12 +1,21 @@
 # Eyes on Karhutla: pipeline
 
-NASA Space Apps Challenge 2026: **Harmonization of MODIS and VIIRS Hot Spots**, focused on
-Indonesian forest and land fires (*karhutla*). The goal is a consistent, explainable historical
-burning activity calendar built from harmonized MODIS and VIIRS detections.
+**Harmonization of MODIS and VIIRS hot spots** for Indonesian forest and land fires
+(*karhutla*). The goal is a consistent, explainable historical burning activity calendar built
+from harmonized MODIS and VIIRS detections.
 
-This is the `pipeline/` package of the [Dhien Exploration](https://github.com/dhien-exploration)
-`eyes-on-karhutla` monorepo: the Python scientific source of truth (ingestion, harmonization,
-activity metrics, data-product export). The public map lives in `../web`.
+This is the `pipeline/` package of the `eyes-on-karhutla` monorepo: the Python scientific source
+of truth (ingestion, harmonization, activity metrics, data-product export). The public map lives in `../web`.
+
+How the pipeline and its data contract are designed (data flow, file layout, publishing plan, open
+questions): [`docs/architecture.md`](docs/architecture.md).
+
+## Stack
+
+Python 3.12 managed with [uv](https://docs.astral.sh/uv/). pandas and NumPy for tabular work,
+GeoPandas and Shapely for geometry and province assignment, requests and python-dotenv for the
+NASA FIRMS API, and jsonschema to validate exported data products. JupyterLab for research
+notebooks, Streamlit with Plotly and Folium for the internal analysis tool, and pytest for tests.
 
 ## Setup
 
@@ -22,8 +31,7 @@ uv run streamlit run spikes/province_click.py # internal analysis tool with clic
 ## Exporting data for the web app
 
 The public map (`../web` in this monorepo) reads data files that this package exports (contract
-v1, multi-year). The full pipeline plan is in [`docs/README.md`](docs/README.md). All commands run
-from `pipeline/` and need `FIRMS_MAP_KEY` in `.env`.
+v1, multi-year). All commands run from `pipeline/` and need `FIRMS_MAP_KEY` in `.env`.
 
 ### 1. Get province boundaries (once)
 
@@ -146,7 +154,7 @@ All three files must cover the same range; the newest file per source is used.
 
 - `src/eyes_on_karhutla/`: shared logic used by both the notebooks and Streamlit
   (ingestion → preprocessing → harmonization → regions → activity → export / visualization)
-- `docs/`: system pipeline plan
+- `docs/architecture.md`: data flow, data contract, publishing plan, open questions
 - `notebooks/`: exploration and validation
 - `tests/`: pytest for the reusable logic
 - `data/raw`, `data/processed`: local data (not committed)

@@ -21,7 +21,7 @@
   (`../web` in the monorepo). **Any change to exported files must, in the same step (ideally the
   same pull request), update:**
   - `lode/export/summary.md` (this package);
-  - `docs/README.md` §3 if the layout changes;
+  - `docs/architecture.md` §3 if the layout changes;
   - `../web/AGENTS.md` §6 (its short summary only; it defers to the schemas).
 - Edit only §6 of the web package's AGENTS.md. Its lode belongs to its own agent: tell the user
   what changed so that agent can update it.

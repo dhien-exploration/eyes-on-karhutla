@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-We are building a Python-based web application for the **NASA Space Apps Challenge 2026: Harmonization of MODIS and VIIRS Hot Spots**.
+We are building a Python-based application for the **harmonization of MODIS and VIIRS hot spots**.
 
 The project focuses on Indonesian forest and land fires (*kebakaran hutan dan lahan*, or *karhutla*).
 
@@ -88,7 +88,7 @@ Before implementing major features, the agent must:
 1. Review the official SiPongi+ map, hotspot distribution page, graphs, and available documentation.
 2. Record the capabilities that are directly verified.
 3. Investigate available filters, historical coverage, downloadable data, and sensor information relevant to the proposed application.
-4. Compare those findings against the NASA Space Apps Challenge requirements.
+4. Compare those findings against this project's goals (section 1).
 5. Maintain a concise feature comparison describing:
    - What SiPongi+ demonstrably provides.
    - What our application plans to provide.
@@ -98,11 +98,11 @@ Before implementing major features, the agent must:
 
 Do not assume that a feature is absent merely because it is not immediately visible in the interface. If its availability cannot be verified, mark it as **unknown**.
 
-Do not spend the hackathon rebuilding the entire SiPongi+ platform. Prioritize a small, convincing demonstration of MODIS–VIIRS harmonization and historical activity analysis.
+Do not spend effort rebuilding the entire SiPongi+ platform. Prioritize a small, convincing demonstration of MODIS–VIIRS harmonization and historical activity analysis.
 
 ### 2.5 Data Sources and Attribution
 
-Prefer NASA FIRMS and other authoritative NASA sources for obtaining the satellite observations required by the challenge.
+Prefer NASA FIRMS and other authoritative NASA sources for obtaining the satellite observations this project needs.
 
 Relevant starting point:
 - NASA FIRMS: https://firms.modaps.eosdis.nasa.gov/
@@ -339,7 +339,7 @@ If the scientific basis for a proposed metric is unclear, investigate and docume
 
 ## 8. Application Priorities
 
-Implement features in this order unless challenge requirements or data findings justify a change.
+Implement features in this order unless project goals or data findings justify a change.
 
 ### Priority 1: Reliable data foundation
 - Obtain a representative MODIS and VIIRS dataset.
@@ -363,12 +363,12 @@ Implement features in this order unless challenge requirements or data findings 
 - Add a map and date or regional filters.
 - Display the calendar, supporting charts, and relevant source information.
 - Provide a clear explanation of harmonization.
-- Make it possible for a judge to understand the value of the application quickly.
+- Make it possible for a first-time visitor to understand the value of the application quickly.
 
 ### Priority 5: Anomaly analysis and additional features
 - Add historical comparisons when the available data supports them.
 - Consider downloadable results and additional analytical views.
-- Consider notifications only if the core challenge deliverable is already working and time remains.
+- Consider notifications only if the core deliverable is already working and time remains.
 
 ## 9. Notifications and Public Safety
 
@@ -507,8 +507,8 @@ if the lode/ does not exist, ask the user if you should create one.
 
 Decided by the project owner on 2026-10-21.
 
-- The **public, user-facing web application** is a separate JavaScript package (`web/` in the same monorepo, `dhien-exploration/eyes-on-karhutla`), built around an interactive map (MapLibre GL JS). It reads pre-computed data products and contains no scientific processing.
-- Both packages live in one monorepo owned by the GitHub org **Dhien Exploration**: this Python package in `pipeline/`, the web app in `web/`. The package boundary still separates science (here) from presentation (there).
+- The **public, user-facing web application** is a separate JavaScript package (`web/` in the same monorepo, `eyes-on-karhutla`), built around an interactive map (MapLibre GL JS). It reads pre-computed data products and contains no scientific processing.
+- Both packages live in one monorepo: this Python package in `pipeline/`, the web app in `web/`. The package boundary still separates science (here) from presentation (there).
 - **This package stays Python** and is the **internal tool and the scientific source of truth**:
   - ingestion, preprocessing, harmonization and activity logic in `src/eyes_on_karhutla/`
   - JupyterLab research and validation
@@ -522,9 +522,9 @@ Rules that follow from this:
 - Exported data products are a **contract**. They have a documented schema, a schema version, stable identifiers (province ID, cell ID), units, provenance and attribution. Breaking changes need a new schema version.
 - Exports must carry the same scientific labels used here: "active cell-days", the separate MODIS and VIIRS series (never summed), partial-coverage flags, and "detections, not confirmed fires".
 
-### 13.2 Vision: Community Platform (Post-Hackathon)
+### 13.2 Vision: Community Platform (Future)
 
-After the hackathon, win or lose, the project owner intends the site to grow into an open, community-driven movement:
+Over time, the project owner intends the site to grow into an open, community-driven movement:
 - Anyone can contribute **code or data** to the repositories.
 - **Local residents** affected by fires can select a detection dot or province and submit a situation update.
 - **Remote contributors** can attach findings from social media to a dot or province.
@@ -540,6 +540,6 @@ Invariants for any future community feature:
 - Prepare publishing guidelines for reports that blame identifiable people or organizations, and seek legal advice before launch.
 - For social-media findings, store links and short summaries, not copies of others' content.
 
-This vision does not change hackathon priorities (section 8). MODIS–VIIRS harmonization and historical activity remain the core deliverable. Current designs should only avoid blocking the vision, for example by using stable identifiers and keeping satellite and community data in separate layers.
+This vision does not change the current priorities (section 8). MODIS–VIIRS harmonization and historical activity remain the core deliverable. Current designs should only avoid blocking the vision, for example by using stable identifiers and keeping satellite and community data in separate layers.
 
 Details and open questions are maintained in `lode/plans/vision-community.md`.

@@ -23,8 +23,7 @@
 - **Outside provinces**: cell-days whose cell centre is in no province polygon (sea, coast, neighbouring countries). They are reported, never dropped.
 - **Data products (contract v1)**: the schema-validated multi-year files `export.py` writes for the web app (manifest, provinces, Indonesia monthly, per-province daily, monthly and per-year cells).
 - **Status (complete / partial / missing)**: coverage of a WIB date, month or year in the exports. Missing values are `null`, never 0.
-- **Dhien Exploration**: the GitHub org (`dhien-exploration`) that owns the monorepo, named after the Acehnese hero Cut Nyak Dhien.
-- **Monorepo**: `dhien-exploration/eyes-on-karhutla`, with this Python package in `pipeline/` and the public web app in `web/`.
+- **Monorepo**: `eyes-on-karhutla`, with this Python package in `pipeline/` and the public web app in `web/`.
 - **Activity calendar**: a harmonized activity metric aggregated by day, week, month or year for a region.
 - **Baseline / anomaly**: the historical reference for a period and region, and the documented deviation from it.
 - **SiPongi+**: the Indonesian Ministry of Forestry's fire information platform and the existing system we compare against. Data taken from it must cite "SIPONGI KEMENHUT".

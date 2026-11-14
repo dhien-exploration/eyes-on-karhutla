@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-This is the **public web application** for Eyes on Karhutla, a project started for the **NASA Space Apps Challenge 2026: Harmonization of MODIS and VIIRS Hot Spots**. It focuses on Indonesian forest and land fires (*kebakaran hutan dan lahan*, or *karhutla*).
+This is the **public web application** for Eyes on Karhutla, a project on the **harmonization of MODIS and VIIRS hot spots**. It focuses on Indonesian forest and land fires (*kebakaran hutan dan lahan*, or *karhutla*).
 
 The application lets people explore the **history of satellite-detected burning activity across Indonesia** through an interactive map:
 - See all of Indonesia on one map.
@@ -11,11 +11,11 @@ The application lets people explore the **history of satellite-detected burning 
 - Inspect the detection history of a single dot or a whole province.
 - Compare the MODIS and VIIRS sensors honestly, without mixing them up.
 
-After the hackathon, the project owner intends this to become an **open, community-driven platform** where residents and remote contributors can add moderated situation reports (section 10).
+Over time, the project owner intends this to become an **open, community-driven platform** where residents and remote contributors can add moderated situation reports (section 10).
 
 ### 1.1 One Monorepo, Two Packages
 
-The project lives in one monorepo, `dhien-exploration/eyes-on-karhutla`, owned by the GitHub org **Dhien Exploration** (named after the Acehnese hero Cut Nyak Dhien).
+The project lives in one monorepo, `eyes-on-karhutla`.
 
 | Folder | Language | Role |
 |---|---|---|
@@ -27,7 +27,7 @@ flowchart LR
     FIRMS[NASA FIRMS] --> PY[pipeline/<br/>Python + tests]
     PY -->|versioned data products| DATA[(static data files)]
     DATA --> WEB[web/<br/>MapLibre UI]
-    COMM[Community reports<br/>post-hackathon] -.->|moderated, separate layer| WEB
+    COMM[Community reports<br/>future] -.->|moderated, separate layer| WEB
 ```
 
 **The central rule: this package contains no scientific processing.** It never harmonizes, re-aggregates or reinterprets satellite detections. If the UI needs a new metric, it is added to `pipeline/` with tests and exported. Displaying, filtering and formatting exported values is fine. Inventing new derived metrics in the browser is not. Both packages share one repo, so a contract change and the matching web change belong in the same pull request.
@@ -64,7 +64,7 @@ Do not present a basic hotspot map, province filters or ordinary charts as innov
    - Clicking a dot shows that cell's **detection dates** and which sensors detected it on each date.
    - The province panel shows the **daily or calendar history** of the whole province, with MODIS and VIIRS S-NPP side by side.
 4. A **time control** (date range or slider) for exploring history across years.
-5. Clear on-screen explanations of the metric, the sensors, coverage gaps and limitations. A judge or first-time visitor should understand the point within a minute.
+5. Clear on-screen explanations of the metric, the sensors, coverage gaps and limitations. A first-time visitor should understand the point within a minute.
 
 UI and gamification:
 - Rich interaction and playful exploration are welcome. Use mechanics that teach and explore, for example "find the peak season", "compare the two sensors", or "discover the 2015 and 2019 crises".
@@ -89,7 +89,7 @@ Basemap tiles: use a provider whose terms allow this use and that needs no secre
 
 ## 6. Data Products Contract (v1, multi-year)
 
-**Source of truth:** the JSON Schemas shipped with every export (`data/v1/schema/*.schema.json`), produced by `../pipeline` (`src/eyes_on_karhutla/export.py`; documented in its `lode/export/summary.md` and `docs/README.md`). The pipeline owns the schema. This package consumes it, generates its types from the schemas (`npm run gen:data`), and validates data at load time. If this section and the schemas ever disagree, the schemas win. Report the mismatch instead of coding around it.
+**Source of truth:** the JSON Schemas shipped with every export (`data/v1/schema/*.schema.json`), produced by `../pipeline` (`src/eyes_on_karhutla/export.py`; documented in its `lode/export/summary.md` and `docs/architecture.md`). The pipeline owns the schema. This package consumes it, generates its types from the schemas (`npm run gen:data`), and validates data at load time. If this section and the schemas ever disagree, the schemas win. Report the mismatch instead of coding around it.
 
 Export (run in `pipeline/`): `uv run python -m eyes_on_karhutla.export --out ../web/public/data/v1`. This is a summary of the layout:
 
@@ -171,7 +171,7 @@ Keep data access (`src/data/`) separate from presentation. Components never read
 - **Web (desktop) first**, decided by the owner. Design for desktop browsers first, but keep layouts usable at narrow widths: many Indonesian users are on low-end phones and slow connections. Keep the initial load small, lazy-load provinces, and avoid huge bundles.
 - Provide text and table alternatives for key charts.
 
-## 10. Future: Community Contributions (Post-Hackathon)
+## 10. Future: Community Contributions
 
 The project owner's vision:
 - Anyone can contribute code or data through the repository.

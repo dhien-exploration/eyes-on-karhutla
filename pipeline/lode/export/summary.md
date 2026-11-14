@@ -3,7 +3,7 @@
 This package exports versioned, schema-validated data files for the public web app (`web/` in the
 same monorepo; AGENTS.md §13.1). There is **one** contract: v1, multi-year, built from the raw
 archive. How the archive and `run_archive` work: [multi-year-archive](multi-year-archive.md).
-Step-by-step how-to: `pipeline/README.md`. Human-readable plan: `docs/README.md` §3. This package owns the schema.
+Step-by-step how-to: `pipeline/README.md`. Human-readable design: `docs/architecture.md` §3. This package owns the schema.
 
 ```bash
 uv run python -m eyes_on_karhutla.export --out ../web/public/data/v1 [--start D] [--end D] [--boundaries F]
@@ -107,7 +107,7 @@ products["provinces/ID-KT/monthly.json"]["modis"][:3]
   cell-days for modis / viirs_snpp / viirs_all in 2019).
 
 ## Not yet done
-- Stage 2 publishing (scheduled CI to static hosting). See `docs/README.md` §4.
+- Stage 2 publishing (scheduled CI to static hosting). See `docs/architecture.md` §4.
 - Multi-year national cell layers (likely PMTiles) if per-province files become too slow.
 
 Related: [multi-year-archive](multi-year-archive.md) · [activity](../activity/summary.md) ·

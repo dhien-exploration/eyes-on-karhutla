@@ -6,7 +6,7 @@
 - plans/
   - [roadmap.md](plans/roadmap.md): priorities and next TODOs
   - [clickable-map.md](plans/clickable-map.md): click-a-province concept, spike results, boundary data
-  - [vision-community.md](plans/vision-community.md): post-hackathon community reports + moderation vision
+  - [vision-community.md](plans/vision-community.md): future community reports + moderation vision
 - data/
   - [summary.md](data/summary.md): data sources overview
   - [firms-api.md](data/firms-api.md): FIRMS area API contract and ingestion

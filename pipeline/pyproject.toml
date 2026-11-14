@@ -1,7 +1,7 @@
 [project]
 name = "eyes-on-karhutla"
 version = "0.1.0"
-description = "Harmonized MODIS–VIIRS burning activity calendar for Indonesian forest and land fires (NASA Space Apps 2026)."
+description = "Harmonized MODIS–VIIRS burning activity calendar for Indonesian forest and land fires."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [
