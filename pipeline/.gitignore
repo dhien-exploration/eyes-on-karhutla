@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+
+# Secrets
+.env
+
+# Data (never commit datasets)
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+
+# Lode session scraps
+lode/tmp/*
+!lode/tmp/.gitkeep
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
