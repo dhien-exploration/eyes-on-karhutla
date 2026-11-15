@@ -159,6 +159,35 @@ button { font: inherit; }
   border: 1px solid var(--c-border); background: var(--c-surface); color: var(--c-text);
 }
 
+/* Share section (lode/ui/share-links.md). */
+.share__hint { margin: 0 0 10px; font-size: 0.8rem; line-height: 1.45; color: var(--c-muted); }
+.share__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.share__actions button {
+  padding: 8px 12px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--c-border); background: var(--c-surface); color: var(--c-text);
+}
+.share__actions button:focus-visible { outline: 2px solid var(--c-modis); outline-offset: 2px; }
+.share__status { margin: 6px 0 0; min-height: 1.2em; font-size: 0.8rem; color: var(--c-muted); }
+.share__manual { display: grid; gap: 4px; margin-top: 6px; font-size: 0.8rem; color: var(--c-muted); }
+.share__manual textarea {
+  width: 100%; font: inherit; font-size: 0.75rem; padding: 6px 8px; resize: vertical;
+  border: 1px solid var(--c-border); border-radius: 8px; background: var(--c-surface); color: var(--c-text);
+}
+
+/* Notice for an opened link with unrecognised parts; hangs below the header without resizing it. */
+.link-notice {
+  position: absolute; top: calc(100% + 8px); left: 0; max-width: min(420px, 100%);
+  display: flex; align-items: flex-start; gap: 8px; padding: 8px 10px 8px 14px; border-radius: 12px;
+  font-size: 0.8rem; color: var(--c-text);
+  background: var(--c-glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--c-border); box-shadow: var(--shadow);
+}
+.link-notice p { margin: 0; line-height: 1.45; }
+.link-notice button {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 999px; cursor: pointer; line-height: 1;
+  border: 1px solid var(--c-border); background: var(--c-surface); color: var(--c-text);
+}
+
 /* Notes and sources sections. */
 .notes, .sources { font-size: 0.8rem; line-height: 1.45; color: var(--c-muted); }
 .notes p { margin: 0 0 8px; }

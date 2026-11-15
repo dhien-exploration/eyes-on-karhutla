@@ -6,11 +6,13 @@ import { DotsSection } from './components/DotsSection'
 import { Drawer } from './components/Drawer'
 import { HoverCard } from './components/HoverCard'
 import { LanguageSwitch } from './components/LanguageSwitch'
+import { LinkNotice } from './components/LinkNotice'
 import { MenuButton } from './components/MenuButton'
 import { MiniLegend } from './components/MiniLegend'
 import { MonthlySection } from './components/MonthlySection'
 import { NotesSection } from './components/NotesSection'
 import { ProvinceSection } from './components/ProvinceSection'
+import { ShareSection } from './components/ShareSection'
 import { SourcesLine } from './components/SourcesLine'
 import { SourcesSection } from './components/SourcesSection'
 import { YearPicker } from './components/YearPicker'
@@ -24,6 +26,7 @@ import { COLOR_BY, buildScale, type ColorBy } from './map/choropleth'
 import type { Insets } from './map/geometry'
 import { IndonesiaMap, type ProvinceHover } from './map/IndonesiaMap'
 import { defaultYear, scaleValues, type Year } from './map/years'
+import { readView, resolveView, viewQuery, type ViewParam } from './share/view'
 
 // Series colours live in CSS tokens; the fallbacks match them (and AGENTS.md section 7).
 const SERIES_HUE: Record<ColorBy, [token: string, fallback: string]> = {
@@ -115,6 +118,33 @@ export default function App() {
   const header = useRef<HTMLElement>(null)
   const menuButton = useRef<HTMLButtonElement>(null)
   const headerBottom = useSettledBottom(header, 56)
+  // Shareable links (lode/ui/share-links.md): the opened link is applied once, while
+  // rendering, as soon as the manifest is known (so the first ready frame already shows
+  // it); after that the address follows the state.
+  const [linkApplied, setLinkApplied] = useState(false)
+  const [linkRejected, setLinkRejected] = useState<ViewParam[]>([])
+  const [pendingCell, setPendingCell] = useState<string | null>(null)
+  if (!linkApplied && manifest.status === 'ready') {
+    const { view, rejected } = resolveView(readView(window.location.search), manifest.data)
+    setSelectedId(view.province)
+    if (view.year !== undefined) setPickedYear(view.year)
+    if (view.sensor) setColorBy(view.sensor)
+    setShowOtherViirs(view.other)
+    setSelectedCellId(view.cell)
+    setPendingCell(view.cell)
+    // Like selecting by hand; the visitor's stored drawer preference is left alone.
+    if (view.province) setDrawerOpenState(true)
+    setLinkRejected(rejected)
+    setLinkApplied(true)
+  }
+  // A linked dot is checked once its province × year file has loaded.
+  if (pendingCell && cells.status !== 'loading') {
+    setPendingCell(null)
+    if (selectedCellId === pendingCell && cells.status === 'ready' && !cellRecords?.has(pendingCell)) {
+      setSelectedCellId(null)
+      setLinkRejected((r) => (r.includes('cell') ? r : [...r, 'cell']))
+    }
+  }
 
   const setDrawerOpen = (open: boolean) => {
     setDrawerOpenState(open)
@@ -137,6 +167,21 @@ export default function App() {
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
   }, [drawerOpen])
+
+  // The address bar is always a working link: only what differs from the defaults.
+  useEffect(() => {
+    if (!linkApplied) return
+    const query = viewQuery({
+      province: selectedId,
+      year: pickedYear,
+      sensor: colorBy === COLOR_BY[0] ? undefined : colorBy,
+      cell: selectedCellId,
+      other: showOtherViirs,
+    })
+    const { pathname, search, hash } = window.location
+    const next = `${query ? `?${query}` : ''}`
+    if (next !== search) window.history.replaceState(window.history.state, '', `${pathname}${next}${hash}`)
+  }, [linkApplied, selectedId, pickedYear, colorBy, selectedCellId, showOtherViirs])
 
   const byId = useMemo(
     () =>
@@ -206,6 +251,7 @@ export default function App() {
           {ready && manifest.status === 'ready' && <YearPicker manifest={manifest.data} year={year} onChange={pickYear} />}
           {ready && <MenuButton ref={menuButton} open={drawerOpen} onToggle={() => setDrawerOpen(!drawerOpen)} />}
         </div>
+        {ready && linkRejected.length > 0 && <LinkNotice rejected={linkRejected} onDismiss={() => setLinkRejected([])} />}
       </header>
 
       {failed ? (
@@ -265,6 +311,15 @@ export default function App() {
               />
             )}
             <ChoroplethSection scale={scale} series={manifest.data.series} onChange={setColorBy} />
+            <ShareSection
+              manifest={manifest.data}
+              provinceId={selectedId}
+              provinceName={(selectedId && byId.get(selectedId)?.name) || null}
+              year={year}
+              colorBy={colorBy}
+              cellId={selectedCell ? selectedCellId : null}
+              showOtherViirs={showOtherViirs}
+            />
             <NotesSection manifest={manifest.data} />
             <SourcesSection manifest={manifest.data} basemap={basemapCredits} />
           </Drawer>

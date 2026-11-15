@@ -13,6 +13,8 @@ the data products exported by `../pipeline`, and does no scientific processing i
 - Hover a province for its numbers; select one to fly in and see its active cells as dots,
   coloured by sensor agreement. Click a dot for its detection dates per sensor.
 - A year picker (or "Semua tahun") and a monthly chart covering every year.
+- Every view is a link: the address bar follows the province, year, sensor and dot, and the menu can
+  copy the link or a citation that records which data export it showed.
 - Notes on the metric, coverage gaps and boundaries, in Bahasa Indonesia (default) and English.
 
 Hotspots are detections of thermal anomalies, not confirmed fires.

@@ -180,7 +180,7 @@ test('top right reads: language switch, year, menu; the drawer holds every secti
   expect(year.height).toBeCloseTo(lang.height, 0)
 
   const drawer = page.getByRole('complementary', { name: 'Menu' })
-  for (const heading of ['Seluruh Indonesia', 'Aktivitas bulanan · Seluruh Indonesia', 'Warnai peta menurut', 'Tentang data', 'Sumber data']) {
+  for (const heading of ['Seluruh Indonesia', 'Aktivitas bulanan · Seluruh Indonesia', 'Warnai peta menurut', 'Bagikan tampilan ini', 'Tentang data', 'Sumber data']) {
     await expect(drawer.getByRole('heading', { name: heading, exact: true })).toBeVisible()
   }
 
@@ -477,4 +477,28 @@ test('selecting a province switches the chart to that province', async ({ page }
   await openMap(page)
   await page.getByRole('combobox', { name: 'Pilih provinsi' }).selectOption('ID-KT')
   await expect(page.getByRole('region', { name: 'Aktivitas bulanan · Central Kalimantan' }).locator('canvas')).toBeVisible()
+})
+
+test('a shared link opens its province, year and sensor; the address follows the view', async ({ page }) => {
+  await page.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ json: BLANK_STYLE }))
+  await page.goto('/?province=ID-RI&year=2019&sensor=viirs_snpp')
+  await waitForIdle(page)
+  await expect(page.getByRole('combobox', { name: 'Pilih provinsi' })).toHaveValue('ID-RI')
+  await expect(page.getByRole('combobox', { name: 'Tahun' })).toHaveValue('2019')
+  await expect(page.getByRole('button', { name: 'VIIRS S-NPP', exact: true })).toHaveAttribute('aria-pressed', 'true')
+  // The camera flew in: zoomed past the national view.
+  expect((await mapState(page)).zoom).toBeGreaterThan(5)
+  await expect.poll(() => cellsInSource(page), { timeout: 15_000 }).toBeGreaterThan(0)
+
+  await page.getByRole('combobox', { name: 'Pilih provinsi' }).selectOption('ID-KT')
+  await expect(page).toHaveURL(/\?province=ID-KT&year=2019&sensor=viirs_snpp$/)
+})
+
+test('an unrecognised link shows a notice and the default view', async ({ page }) => {
+  await page.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ json: BLANK_STYLE }))
+  await page.goto('/?province=ID-XX')
+  await waitForIdle(page)
+  await expect(page.getByRole('status')).toContainText('Sebagian tautan tidak dikenali (provinsi)')
+  await expect(page.getByRole('heading', { name: 'Seluruh Indonesia', exact: true })).toBeVisible()
+  await expect(page).toHaveURL(/\/$/)
 })

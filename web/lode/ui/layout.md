@@ -1,10 +1,11 @@
 # Page Layout and Components
 
-`App.tsx` owns the page state: `year` (picked, else `defaultYear(manifest)`), `selectedId`, `selectedCellId`, `showOtherViirs`, `hover`, `colorBy`, `drawerOpen`, `basemapCredits` (and `useCells(selectedId, year)`). The **map fills the whole window**, and everything else floats over it: the header (brand + language switch + ☰), the **drawer**, the **mini legend**, and the **sources line**. It renders one of three states: **loading**, **error** (`DataErrorState` *instead of* the map, so wrong or empty data is never drawn), or **ready**.
+`App.tsx` owns the page state: `year` (picked, else `defaultYear(manifest)`), `selectedId`, `selectedCellId`, `showOtherViirs`, `hover`, `colorBy`, `drawerOpen`, `basemapCredits` (and `useCells(selectedId, year)`). The opened link sets the initial view, and the address follows the state ([share-links.md](share-links.md)). The **map fills the whole window**, and everything else floats over it: the header (brand + language switch + ☰), the **drawer**, the **mini legend**, and the **sources line**. It renders one of three states: **loading**, **error** (`DataErrorState` *instead of* the map, so wrong or empty data is never drawn), or **ready**.
 
 ```mermaid
 flowchart TD
     APP[App] --> H[header: brand top-left · LanguageSwitch, YearPicker, MenuButton ☰ top-right]
+    H --> LN[LinkNotice: under the brand, when a link had unrecognised parts]
     APP -->|loading| LD[status: Memuat data…]
     APP -->|failed| ER[DataErrorState + Coba lagi]
     APP -->|ready| MAP[IndonesiaMap full-screen + HoverCard]
@@ -15,6 +16,7 @@ flowchart TD
     DR --> MS[MonthlySection: chart for Indonesia or the province]
     DR --> SD[DotsSection: when a province is selected]
     DR --> S1[ChoroplethSection: sensor toggle + full legend]
+    DR --> SH[ShareSection: copy link + copy citation]
     DR --> S3[NotesSection: metric, not-a-fire, never summed, period, boundaries]
     DR --> S4[SourcesSection #sources: full credits]
     APP -->|ready| SL[SourcesLine: page footer, bottom edge]

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import App from '../../src/App'
 import { DataError, DataProvider, type DataClient } from '../../src/data'
 import { I18nProvider } from '../../src/i18n/I18nProvider'
@@ -64,7 +64,11 @@ function renderApp(client: DataClient) {
 }
 
 describe('App', () => {
-  beforeEach(() => window.localStorage.clear())
+  beforeEach(() => {
+    window.localStorage.clear()
+    // The app writes its view into the address; each test starts from a plain URL.
+    window.history.replaceState(null, '', '/')
+  })
 
   it('shows a loading state, then the map and national totals side by side', async () => {
     renderApp(fakeClient())
@@ -324,5 +328,100 @@ describe('App', () => {
     fail = false
     fireEvent.click(screen.getByRole('button', { name: 'Coba lagi' }))
     await waitFor(() => expect(screen.getByRole('heading', { name: 'Seluruh Indonesia' })).toBeInTheDocument())
+  })
+})
+
+describe('shareable links', () => {
+  const writeText = vi.fn<(text: string) => Promise<void>>()
+
+  beforeEach(() => {
+    window.localStorage.clear()
+    window.history.replaceState(null, '', '/')
+    writeText.mockReset().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true })
+  })
+
+  const open = (search: string) => {
+    window.history.replaceState(null, '', `/${search}`)
+    return renderApp(fakeClient())
+  }
+
+  it('opens a link on its province, year, sensor and dot, with the drawer open', async () => {
+    open('?province=ID-RI&year=2020&sensor=viirs_snpp&cell=55_10155')
+    expect(await screen.findByRole('heading', { name: 'Riau' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: /Peta/ })).toHaveAttribute('data-selected', 'ID-RI')
+    expect(screen.getByRole('combobox', { name: 'Tahun' })).toHaveValue('2020')
+    expect(screen.getByRole('button', { name: 'VIIRS S-NPP' })).toHaveAttribute('aria-pressed', 'true')
+    expect(await screen.findByRole('region', { name: 'Detail titik' })).toBeInTheDocument()
+    expect(screen.getByRole('complementary', { name: 'Menu' })).toHaveAttribute('data-open', 'true')
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+    expect(window.location.search).toBe('?province=ID-RI&year=2020&sensor=viirs_snpp&cell=55_10155')
+  })
+
+  it('opens a link on a non-default year, and on all years', async () => {
+    open('?year=2019')
+    expect(await screen.findByRole('combobox', { name: 'Tahun' })).toHaveValue('2019')
+    cleanup()
+    open('?year=all')
+    expect(await screen.findByText('Active cell-days · Semua tahun')).toBeInTheDocument()
+  })
+
+  it('names the parts of a link it does not recognise and shows the default view', async () => {
+    open('?province=ID-XX&year=1999&sensor=modis')
+    const notice = await screen.findByRole('status')
+    expect(notice).toHaveTextContent('Sebagian tautan tidak dikenali (provinsi, tahun)')
+    expect(screen.getByRole('heading', { name: 'Seluruh Indonesia' })).toBeInTheDocument()
+    expect(screen.getByRole('combobox', { name: 'Tahun' })).toHaveValue('2020')
+    // The address keeps only what applies.
+    expect(window.location.search).toBe('')
+    fireEvent.click(within(notice).getByRole('button', { name: 'Tutup pemberitahuan' }))
+    expect(screen.queryByRole('status')).not.toBeInTheDocument()
+  })
+
+  it('drops a linked dot that is not in the province × year file', async () => {
+    open('?province=ID-RI&year=2020&cell=1_1')
+    expect(await screen.findByRole('status')).toHaveTextContent('(titik)')
+    expect(screen.queryByRole('region', { name: 'Detail titik' })).not.toBeInTheDocument()
+    expect(window.location.search).toBe('?province=ID-RI&year=2020')
+  })
+
+  it('keeps the address in step with the view', async () => {
+    renderApp(fakeClient())
+    fireEvent.click(await screen.findByText('stub-map-click-riau'))
+    expect(window.location.search).toBe('?province=ID-RI')
+    fireEvent.change(screen.getByRole('combobox', { name: 'Tahun' }), { target: { value: '2019' } })
+    expect(window.location.search).toBe('?province=ID-RI&year=2019')
+    fireEvent.click(screen.getByRole('button', { name: 'VIIRS S-NPP' }))
+    expect(window.location.search).toBe('?province=ID-RI&year=2019&sensor=viirs_snpp')
+    fireEvent.click(screen.getByRole('button', { name: 'Kembali ke seluruh Indonesia' }))
+    expect(window.location.search).toBe('?year=2019&sensor=viirs_snpp')
+  })
+
+  it('copies a link that always names the year and sensor', async () => {
+    renderApp(fakeClient())
+    fireEvent.click(await screen.findByRole('button', { name: 'Salin tautan' }))
+    await waitFor(() => expect(writeText).toHaveBeenCalledWith(`${window.location.origin}/?year=2020&sensor=modis`))
+    expect(await screen.findByText('Tautan disalin.')).toBeInTheDocument()
+  })
+
+  it('copies a citation that records the export it shows', async () => {
+    open('?province=ID-RI&year=2020&sensor=viirs_snpp&cell=55_10155')
+    await screen.findByRole('region', { name: 'Detail titik' })
+    fireEvent.click(screen.getByRole('button', { name: 'Salin kutipan' }))
+    await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1))
+    const text = writeText.mock.calls[0][0]
+    expect(text).toMatch(
+      /^Eyes on Karhutla \(2026\)\. Riau, 2020, VIIRS S-NPP, Active cell-days, sel 55_10155\. Data: NASA FIRMS \(MODIS, VIIRS\), ekspor 2026-10-26\. Diakses \d{4}-\d{2}-\d{2}\. /,
+    )
+    expect(text).toMatch(/\/\?province=ID-RI&year=2020&sensor=viirs_snpp&cell=55_10155$/)
+    expect(await screen.findByText('Kutipan disalin.')).toBeInTheDocument()
+  })
+
+  it('shows the text to copy by hand when the clipboard is unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true })
+    renderApp(fakeClient())
+    fireEvent.click(await screen.findByRole('button', { name: 'Salin tautan' }))
+    const field = await screen.findByRole('textbox', { name: /Tidak dapat menyalin otomatis/ })
+    expect(field).toHaveValue(`${window.location.origin}/?year=2020&sensor=modis`)
   })
 })

@@ -17,6 +17,7 @@
   - [attribution.md](map/attribution.md): tiny sources line, OSMF rules, basemap credit parsing, full credits in the drawer
 - ui/
   - [layout.md](ui/layout.md): full-screen map, ☰ drawer (sections), mini legend, sources line, insets, components
+  - [share-links.md](ui/share-links.md): shareable view links (query params), address sync, copy link, citation, link notice
 - chart/
   - [monthly.md](chart/monthly.md): monthly MODIS/VIIRS chart (uPlot), gaps vs partial, year band, click → year, table
 - plans/
